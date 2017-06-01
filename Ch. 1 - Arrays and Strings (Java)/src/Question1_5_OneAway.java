@@ -2,17 +2,6 @@
  * Created by SuperLinguini on 5/31/2017.
  */
 public class Question1_5_OneAway {
-    public static void test(String a, String b, boolean expected) {
-        boolean resultA = isOneAway(a, b);
-        boolean resultB = isOneAway(a, b);
-
-        if (resultA == expected && resultB == expected) {
-            System.out.println(a + ", " + b + ": success");
-        } else {
-            System.out.println(a + ", " + b + ": error");
-        }
-    }
-
     public static void main(String[] args) {
         String[][] tests = {{"a", "b", "true"},
                 {"", "d", "true"},
@@ -38,11 +27,69 @@ public class Question1_5_OneAway {
         }
     }
 
-    /**
-     * Attempted to use char pointers like in quick sort to match strings.
-     * Almost worked but too many edge cases.
-     */
+    public static void test(String a, String b, boolean expected) {
+        boolean resultA = isOneAway(a, b);
+        boolean resultB = isOneAway(a, b);
+
+        if (resultA == expected && resultB == expected) {
+            System.out.println(a + ", " + b + ": success");
+        } else {
+            System.out.println(a + ", " + b + ": error");
+        }
+    }
+
     public static boolean isOneAway(String first, String second) {
+        if (first.length() == second.length())
+            return isOneReplaced(first, second);
+        else if (Math.abs(first.length() - second.length()) <= 1)
+            return isOneOff(first, second);
+        return false;
+    }
+
+    private static boolean isOneReplaced(String first, String second) {
+        boolean different = false;
+        for (int i = 0; i < first.length(); i++) {
+            if (first.charAt(i) != second.charAt(i)) {
+                if (different) {
+                    return false;
+                }
+                different = true;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isOneOff(String one, String two) {
+        String first, second;
+        if (one.length() < two.length()) {
+            first = two;
+            second = one;
+        } else {
+            first = one;
+            second = two;
+        }
+        int f = 0, s = 0;
+        while (f < first.length() && s < second.length()) {
+            if (first.charAt(f) != second.charAt(s)) {
+                if (f != s) {
+                    return false;
+                }
+                f++;
+            } else {
+                f++;
+                s++;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Attempted to use indexes like in quick sort to match strings.
+     * Almost worked but too many edge cases.
+     * So close to the provided answer!
+     */
+    public static boolean isOneAwayIndex(String first, String second) {
         int f = 0, s = 0;
         int max = first.length() >= second.length() ? first.length() - 1: second.length() - 1;
         int diffs = 0;
